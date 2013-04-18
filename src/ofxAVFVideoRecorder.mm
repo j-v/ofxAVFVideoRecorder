@@ -1,6 +1,6 @@
 // TODO Maybe use CVPixelBufferCreateWithBytes instead of this CGImage stuff
 
-#include "AVFVideoRecorder.h"
+#include "ofxAVFVideoRecorder.h"
 //#import "Cocoa/Cocoa.h"
 #import <AVFoundation/AVFoundation.h>
 
