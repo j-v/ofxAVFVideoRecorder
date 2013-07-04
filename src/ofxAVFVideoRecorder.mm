@@ -245,7 +245,7 @@ void ofxAVFVideoRecorder::writeRGBA(unsigned char *data) {
 	}
 }
 
-int ofxAVFVideoRecorder::setAudioFile(string filename, float startPosMs) {
+int ofxAVFVideoRecorder::setAudioFile(string filename, int startPosMs) {
 	// TODO validate input?
 	audioFile = filename;
     audioStartPosMs = startPosMs;

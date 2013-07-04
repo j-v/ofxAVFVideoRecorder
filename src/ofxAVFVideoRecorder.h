@@ -15,7 +15,7 @@ public:
     bool isRecording();
     void setup(string $filename, int $width, int $height, int $framerate); // TODO type, quality
     void writeRGBA(unsigned char *data); // TODO other data types?
-    int setAudioFile(string filename, float startPosMs = 0);
+    int setAudioFile(string filename, int startPosMs = 0);
     void finishMovie();
 private:
 //    CGImageRef getCGImageFromData(unsigned char *data);
@@ -30,7 +30,7 @@ private:
     int frames;
     string filename;
     string tmp_filename;
-    float audioStartPosMs;
+    int audioStartPosMs;
     
 //    AVAssetWriterInput * writerInput;
 //    AVAssetWriter * videoWriter;
