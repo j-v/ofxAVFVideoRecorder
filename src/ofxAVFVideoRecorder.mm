@@ -287,7 +287,7 @@ void ofxAVFVideoRecorder::addAudioToFileAtPath(string srcPath, string destPath){
     [compositionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero,videoAsset.duration) ofTrack:videoAssetTrack atTime:kCMTimeZero
                                      error:&error];
     
-    CMTime audioStartTime = CMTimeMakeWithSeconds(audioStartPosMs, framerate);
+    CMTime audioStartTime = CMTimeMakeWithSeconds(audioStartPosMs*1000, framerate);
     //attach audio file
      
     AVURLAsset * urlAsset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:ns_audioPath] options:nil];
