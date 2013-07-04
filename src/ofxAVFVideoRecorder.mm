@@ -287,16 +287,16 @@ void ofxAVFVideoRecorder::addAudioToFileAtPath(string srcPath, string destPath){
     [compositionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero,videoAsset.duration) ofTrack:videoAssetTrack atTime:kCMTimeZero
                                      error:&error];
     
-    CMTime audioStartTime = CMTimeMakeWithSeconds(audioStartPosMs*1000, framerate);
+    CMTime audioStartTime = CMTimeMakeWithSeconds((float)audioStartPosMs/1000.0, framerate);
     //attach audio file
      
-    AVURLAsset * urlAsset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:ns_audioPath] options:nil];
+    AVURLAsset * audioAsset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:ns_audioPath] options:nil];
     		
-    AVAssetTrack * audioAssetTrack = [[urlAsset tracksWithMediaType:AVMediaTypeAudio] objectAtIndex:0];
+    AVAssetTrack * audioAssetTrack = [[audioAsset tracksWithMediaType:AVMediaTypeAudio] objectAtIndex:0];
     AVMutableCompositionTrack *compositionAudioTrack = [composition addMutableTrackWithMediaType:AVMediaTypeAudio
                                                                                 preferredTrackID: kCMPersistentTrackID_Invalid];
     
-    [compositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero,videoAsset.duration) ofTrack:audioAssetTrack atTime:audioStartTime error:&error];
+    [compositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero,audioAsset.duration) ofTrack:audioAssetTrack atTime:audioStartTime error:&error];
     
 	// TODO Export preset
     AVAssetExportSession* assetExport = [[AVAssetExportSession alloc] initWithAsset:composition presetName:AVAssetExportPresetAppleProRes422LPCM];
