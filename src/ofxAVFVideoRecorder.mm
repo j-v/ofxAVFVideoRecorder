@@ -70,8 +70,9 @@ CVPixelBufferRef pixelBufferFromCGImage(CGImageRef image, int width, int height)
     return pxbuffer;
 }
 
-ofxAVFVideoRecorder::ofxAVFVideoRecorder() {
-	recording = false;
+ofxAVFVideoRecorder::ofxAVFVideoRecorder() :
+    audioStartPosMs(0), recording(false)
+{
 } 
 
 ofxAVFVideoRecorder::~ofxAVFVideoRecorder() {
@@ -244,9 +245,10 @@ void ofxAVFVideoRecorder::writeRGBA(unsigned char *data) {
 	}
 }
 
-int ofxAVFVideoRecorder::setAudioFile(string filename) {
+int ofxAVFVideoRecorder::setAudioFile(string filename, float startPosMs) {
 	// TODO validate input?
 	audioFile = filename;
+    audioStartPosMs = startPosMs;
 }
 
 void ofxAVFVideoRecorder::finishMovie() {
@@ -285,16 +287,16 @@ void ofxAVFVideoRecorder::addAudioToFileAtPath(string srcPath, string destPath){
     [compositionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero,videoAsset.duration) ofTrack:videoAssetTrack atTime:kCMTimeZero
                                      error:&error];
     
-    CMTime audioStartTime = kCMTimeZero;
+    CMTime audioStartTime = CMTimeMakeWithSeconds(audioStartPosMs, framerate);
     //attach audio file
      
     AVURLAsset * urlAsset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:ns_audioPath] options:nil];
-    
+    		
     AVAssetTrack * audioAssetTrack = [[urlAsset tracksWithMediaType:AVMediaTypeAudio] objectAtIndex:0];
     AVMutableCompositionTrack *compositionAudioTrack = [composition addMutableTrackWithMediaType:AVMediaTypeAudio
                                                                                 preferredTrackID: kCMPersistentTrackID_Invalid];
     
-    [compositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero,videoAsset.duration) ofTrack:audioAssetTrack atTime:kCMTimeZero error:&error];
+    [compositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero,videoAsset.duration) ofTrack:audioAssetTrack atTime:audioStartTime error:&error];
     
 	// TODO Export preset
     AVAssetExportSession* assetExport = [[AVAssetExportSession alloc] initWithAsset:composition presetName:AVAssetExportPresetAppleProRes422LPCM];
