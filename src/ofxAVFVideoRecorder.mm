@@ -283,7 +283,7 @@ void ofxAVFVideoRecorder::addAudioToFileAtPath(string srcPath, string destPath){
     AVMutableCompositionTrack *compositionVideoTrack = [composition addMutableTrackWithMediaType:AVMediaTypeVideo
                                                                                 preferredTrackID: kCMPersistentTrackID_Invalid];
     
-	// Use duration of video -- audio would be shortened if longer
+	// Use duration of video 
     [compositionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero,videoAsset.duration) ofTrack:videoAssetTrack atTime:kCMTimeZero
                                      error:&error];
     
@@ -296,7 +296,8 @@ void ofxAVFVideoRecorder::addAudioToFileAtPath(string srcPath, string destPath){
     AVMutableCompositionTrack *compositionAudioTrack = [composition addMutableTrackWithMediaType:AVMediaTypeAudio
                                                                                 preferredTrackID: kCMPersistentTrackID_Invalid];
     
-    [compositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero,audioAsset.duration) ofTrack:audioAssetTrack atTime:audioStartTime error:&error];
+	CMTime audioDuration = CMTimeSubtract(videoAsset.duration, audioStartTime);	
+    [compositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero,audioDuration) ofTrack:audioAssetTrack atTime:audioStartTime error:&error];
     
 	// TODO Export preset
     AVAssetExportSession* assetExport = [[AVAssetExportSession alloc] initWithAsset:composition presetName:AVAssetExportPresetAppleProRes422LPCM];
